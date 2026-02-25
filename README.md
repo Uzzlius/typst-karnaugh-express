@@ -1,13 +1,13 @@
 # Karnaugh
 
-`karnaugh` is a [Typst](https://github.com/typst/typst) package for creating highly customizable Karnaugh maps.
+`karnaugh-express` is a [Typst](https://github.com/typst/typst) package for creating highly customizable Karnaugh maps.
 
 ## Overview
 
 The `karnaugh` function takes two necessary arguments: `variables` and `values`. The parameter `terms` is optional and lets you select cells in the Karnaugh map without the hassle of specifying coordinates:
 
 ```ts
-import "@preview/karnaugh:0.1.0": *
+import "@preview/karnaugh-express:0.1.0": *
 
 #karnaugh(
   ("d", "c", "b", "a"),
@@ -33,7 +33,7 @@ Values are automatically placed so that you can read them directly from a truth 
 | 1 | 1 | 1 | 7        |
 
 ```ts
-import "@preview/karnaugh:0.1.0": *
+import "@preview/karnaugh-express:0.1.0": *
 
 #karnaugh(
   ("a", "b", "c"),
@@ -46,12 +46,12 @@ import "@preview/karnaugh:0.1.0": *
 ## Arranging Variables on the Axis
 
 ### 1. Standard Arrangement
-There are different ways of arranging variables on a Karnaugh map. One is the standard layout shown in the first image. `karnaugh` supports two standard layouts that can be selected with the `arrangement-standard` argument. 
+There are different ways of arranging variables on a Karnaugh map. One is the standard layout shown in the first image. `karnaugh-express` supports two standard layouts that can be selected with the `arrangement-standard` argument. 
 
 `arrangement-standard: 0` is used in the first image. `arrangement-standard: 1` looks like this:
 
 ```ts
-import "@preview/karnaugh:0.1.0": *
+import "@preview/karnaugh-express:0.1.0": *
 
 #karnaugh(
   ("a", "b", "c", "d"),
@@ -66,7 +66,7 @@ import "@preview/karnaugh:0.1.0": *
 You can also specify a completely custom arrangement. Just provide an `arrangement` parameter as an array of two arrays. The first array contains the row axis variables, and the second array contains the column axis variables:
 
 ```ts
-import "@preview/karnaugh:0.1.0": *
+import "@preview/karnaugh-express:0.1.0": *
 
 #karnaugh(
   ("a", "b", "c", "d"),
@@ -86,7 +86,7 @@ To select cells in the K-map, you need to pass the `terms` parameter, which is a
 Because the variables you pass into the `karnaugh` function fulfill a functional purpose (used to specify which cells should be highlighted), they cannot be passed in math mode. This is what the `var-disp` parameter is for. Just create a second array detailing how you want each variable to be displayed, in the exact same order as your functional variables:
 
 ```ts
-import "@preview/karnaugh:0.1.0": *
+import "@preview/karnaugh-express:0.1.0": *
 
 #karnaugh(
   ("a", "b", "c", "d"),
