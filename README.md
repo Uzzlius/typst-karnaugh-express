@@ -15,7 +15,7 @@ import "@preview/karnaugh:0.1.0": *
   terms: ("!b, !a", "a, b")
 )
 ```
-<img src="examples/example_1.png" width="250">  
+<img src="examples/example-1.png" width="250">  
     
 ## Placement of the Values
 
@@ -38,17 +38,17 @@ import "@preview/karnaugh:0.1.0": *
 #karnaugh(
   ("a", "b", "c"),
   (0, 1, 2, 3, 4, 5, 6, 7),
-  arrangement_standard: 1
+  arrangement-standard: 1
 )
 ```
-<img src="examples/example_3.png" width="250">
+<img src="examples/example-3.png" width="250">
 
 ## Arranging Variables on the Axis
 
 ### 1. Standard Arrangement
-There are different ways of arranging variables on a Karnaugh map. One is the standard layout shown in the first image. `karnaugh` supports two standard layouts that can be selected with the `arrangement_standard` argument. 
+There are different ways of arranging variables on a Karnaugh map. One is the standard layout shown in the first image. `karnaugh` supports two standard layouts that can be selected with the `arrangement-standard` argument. 
 
-`arrangement_standard: 0` is used in the first image. `arrangement_standard: 1` looks like this:
+`arrangement-standard: 0` is used in the first image. `arrangement-standard: 1` looks like this:
 
 ```ts
 import "@preview/karnaugh:0.1.0": *
@@ -56,11 +56,11 @@ import "@preview/karnaugh:0.1.0": *
 #karnaugh(
   ("a", "b", "c", "d"),
   (1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1),
-  arrangement_standard: 1,
+  arrangement-standard: 1,
   terms: ("!b, !a", "a, b")
 )
 ```
-<img src="examples/example_2.png" width="250">
+<img src="examples/example-2.png" width="250">
     
 ### 2. Custom Arrangement
 You can also specify a completely custom arrangement. Just provide an `arrangement` parameter as an array of two arrays. The first array contains the row axis variables, and the second array contains the column axis variables:
@@ -75,7 +75,7 @@ import "@preview/karnaugh:0.1.0": *
   terms: ("!b, !a", "a, b")
 )
 ```
-<img src="examples/example_4.png" width="250">
+<img src="examples/example-4.png" width="250">
 
 ## Terms 
 
@@ -83,7 +83,7 @@ To select cells in the K-map, you need to pass the `terms` parameter, which is a
 
 ## Display Variables
 
-Because the variables you pass into the `karnaugh` function fulfill a functional purpose (used to specify which cells should be highlighted), they cannot be passed in math mode. This is what the `var_disp` parameter is for. Just create a second array detailing how you want each variable to be displayed, in the exact same order as your functional variables:
+Because the variables you pass into the `karnaugh` function fulfill a functional purpose (used to specify which cells should be highlighted), they cannot be passed in math mode. This is what the `var-disp` parameter is for. Just create a second array detailing how you want each variable to be displayed, in the exact same order as your functional variables:
 
 ```ts
 import "@preview/karnaugh:0.1.0": *
@@ -91,30 +91,30 @@ import "@preview/karnaugh:0.1.0": *
 #karnaugh(
   ("a", "b", "c", "d"),
   (),
-  var_disp: ($x_1$, $x_2$, $x_3$, $x_4$)
+  var-disp: ($x_1$, $x_2$, $x_3$, $x_4$)
 )
 ```
-<img src="examples/example_5.png" width="250">
+<img src="examples/example-5.png" width="250">
     
 ## Other Parameters
 
 | Parameter | Default | Type | Explanation |
 | --- | --- | --- | --- |
 | `arrangement` | Calculated | `((string,), (string,))` | Explained above |
-| `arrangement_standard` | `0` | `1` or `0` | Explained above |
+| `arrangement-standard` | `0` | `1` or `0` | Explained above |
 | `terms` | `("",)` | `(string,)`| Explained above |
-| `var_disp` | Same as `variables` | `(content,)` | Explained above |
+| `var-disp` | Same as `variables` | `(content,)` | Explained above |
 | `stroke` | `0.5pt` | `length` | The width of all lines |
-| `grid_size` | `0.8cm` | `length` | The size of the grid cells |
-| `draw_subscripts` | `true` | `bool` | Turns the cell index subscripts on or off |
+| `grid-size` | `0.8cm` | `length` | The size of the grid cells |
+| `draw-subscripts` | `true` | `bool` | Turns the cell index subscripts on or off |
 | `transparency` | `70%` | `ratio` | Determines the transparency of the cell highlight colors |
 | `colors` | `(blue, green, yellow, purple, red)` | `(color,)` | The colors used for cell selection. The package loops through them. |
-| `default_fill` | `""` | `string` | When some values aren't provided, cells will be filled with this placeholder |
-| `value_size` | `1em` | `relative length` | Font size of the values |
-| `subscript_size` | `0.6em` | `relative length` | Font size of the subscripts |
-| `distance_subscript_corner` | `0.05` | `length` | Distance from the corner of the grid to the subscripts |
-| `distance_bar_grid` | `0.3` | `length` | Distance from one bar to the other |
-| `distance_bar_letter` | `0.1` | `length` | Distance from the letters (variables) to the bars |
-| `small_bar_len` | `0.1` | `length` | The length of the small lines (or half of it) |
+| `default-fill` | `""` | `string` | When some values aren't provided, cells will be filled with this placeholder |
+| `value-size` | `1em` | `relative length` | Font size of the values |
+| `subscript-size` | `0.6em` | `relative length` | Font size of the subscripts |
+| `distance-subscript-corner` | `0.05` | `length` | Distance from the corner of the grid to the subscripts |
+| `distance-bar-grid` | `0.3` | `length` | Distance from one bar to the other |
+| `distance-bar-letter` | `0.1` | `length` | Distance from the letters (variables) to the bars |
+| `small-bar-len` | `0.1` | `length` | The length of the small lines (or half of it) |
 | `label` | Calculated | `content` | The "title" of the map |
-| `label_position` | `(0.2, 0.2)` | `(length, length)` | The position of the label relative to the upper left corner of the grid |
+| `label-position` | `(0.2, 0.2)` | `(length, length)` | The position of the label relative to the upper left corner of the grid |
