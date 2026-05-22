@@ -28,8 +28,12 @@
     distance-bar-bar: 0.8,
     distance-bar-letter: 0.1,
     small-bar-len: 0.1,
-    label-position: (0.2, 0.2)
+    label-position: (0.2, 0.2), 
 
+    highlight-radius: 0.2, 
+    highlight-inset: 0.1, 
+    highlight-steps: 1,
+    highlight-stroke: 1pt,
   ) = {
 
   //create default label
@@ -77,9 +81,23 @@
 
     //highlight the cells as specified in the provided terms
     for (i, term) in term-positions.enumerate() {
+      let color = colors.at(calc.rem(i, colors.len()))
+      let gap = highlight-inset + calc.rem(i, highlight-steps) * (highlight-stroke / grid-size)
       for n in term {
         let coordinate-center = (n.at(0), columns - n.at(1) -1)
-        draw.rect((coordinate-center.at(0) -0.5, coordinate-center.at(1) -0.5), (coordinate-center.at(0) +0.5, coordinate-center.at(1) +0.5), fill: colors.at(calc.rem(i, colors.len())).transparentize(transparency), stroke: 0pt)
+        let neighbours = (
+          (n.at(0), calc.rem-euclid(n.at(1)-1, columns)) in term, 
+          (calc.rem-euclid(n.at(0)+1, rows), n.at(1)) in term,
+          (n.at(0), calc.rem-euclid(n.at(1)+1, columns)) in term,
+          (calc.rem-euclid(n.at(0)-1, rows), n.at(1)) in term,
+        )
+        draw-bundle-cell(
+          coordinate-center, 
+          neighbours,
+          radius: highlight-radius,
+          pad: gap,
+          fill: color.transparentize(transparency), 
+          stroke: color + highlight-stroke)
       }
     }
 
