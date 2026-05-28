@@ -7,7 +7,6 @@
   let small-line-1 = (0, 0)
   let small-line-2 = (0, 0)
   let anchor = ""
-  let length = end - start
 
   if is-horizontal{
     let length = end - start
@@ -175,7 +174,7 @@
     }
     let row-arrangement = ()
     for i in range(row-vars) {
-      row-arrangement.push(vars.at(2 * i + if(row-vars == col-vars) {0} else {1}))
+      row-arrangement.push(vars.at(2 * i + if row-vars == col-vars {0} else {1}))
     }
     arrangement = (row-arrangement, col-arrangement)
   }
@@ -263,12 +262,8 @@
 }
 
 // create the standard "label" based on the provided variables
-#let create-var-string(vars) = {
-  let string = ""
-  for (i, var) in vars.enumerate() {
-    string = string + if i != 0 {", "} else {""} + var
-  }
-  string
+#let create-label-equation(vars, funcname: $f$) = {
+  math.equation(funcname + math.lr($($ + vars.join($,$) + $)$))
 }
 
 //arrange the display variables in the same way as the functional variables
