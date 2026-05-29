@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.4.2" : canvas, draw
+#import "@preview/cetz:0.4.2" : draw
 
 // creates the bar based on the previously calculated positions
 #let create-bar(name, start, end, offset, is-horizontal, height, small-bar-len, bar-letter-distance, stroke) = {
@@ -7,7 +7,6 @@
   let small-line-1 = (0, 0)
   let small-line-2 = (0, 0)
   let anchor = ""
-  let length = end - start
 
   if is-horizontal{
     let length = end - start
@@ -175,7 +174,7 @@
     }
     let row-arrangement = ()
     for i in range(row-vars) {
-      row-arrangement.push(vars.at(2 * i + if(row-vars == col-vars) {0} else {1}))
+      row-arrangement.push(vars.at(2 * i + if row-vars == col-vars {0} else {1}))
     }
     arrangement = (row-arrangement, col-arrangement)
   }
@@ -263,12 +262,8 @@
 }
 
 // create the standard "label" based on the provided variables
-#let create-var-string(vars) = {
-  let string = ""
-  for (i, var) in vars.enumerate() {
-    string = string + if i != 0 {", "} else {""} + var
-  }
-  string
+#let create-label-equation(vars, funcname: $f$) = {
+  math.equation(funcname + math.lr($($ + vars.join($,$) + $)$))
 }
 
 //arrange the display variables in the same way as the functional variables
@@ -287,4 +282,85 @@
     new-disp.push(inb)
   }
   new-disp
+}
+
+
+// Draw one cell's contribution to a group outline.
+// neighbours: (north, east, south, west) — true if that neighbour is in the same group.
+// pad: gap between the outline and the grid edge (only on exposed sides).
+#let draw-bundle-cell(pos, neighbours, radius: 0.15, pad: 0.1, ..style) = {
+  let (cx, cy) = pos
+  let h = 0.5
+  let (n, e, s, w) = neighbours
+
+  // Inset exposed sides by pad; flush with grid on shared sides
+  let xl = cx - h + (if w { 0 } else { pad })
+  let xr = cx + h - (if e { 0 } else { pad })
+  let yt = cy + h - (if n { 0 } else { pad })
+  let yb = cy - h + (if s { 0 } else { pad })
+
+  // Round a corner only when both adjacent sides are exposed
+  let rnw = if not n and not w { radius } else { 0 }
+  let rne = if not n and not e { radius } else { 0 }
+  let rse = if not s and not e { radius } else { 0 }
+  let rsw = if not s and not w { radius } else { 0 }
+
+  let m = 0.551784  // bezier circle approximation constant
+  let bez(p, q, d0x, d0y, d1x, d1y, r) = draw.bezier(
+    p, q,
+    (p.at(0) + d0x * m * r, p.at(1) + d0y * m * r),
+    (q.at(0) + d1x * m * r, q.at(1) + d1y * m * r), 
+    ..style, fill: none, close: false
+  )
+
+  // Trace clockwise. Draw exposed segments; move-to over internal ones.
+  {
+    // Top edge
+    if not n { draw.line((xl + rnw, yt), (xr - rne, yt), ..style, fill: none, close: false)}
+
+    // NE corner
+    if not n and not e { bez((xr - rne, yt), (xr, yt - rne),  1,  0,  0,  1, rne)}
+
+    // Right edge
+    if not e { draw.line((xr, yt - rne), (xr, yb + rse), ..style, fill: none, close: false)}
+
+    // SE corner
+    if not s and not e { bez((xr, yb + rse), (xr - rse, yb),  0, -1,  1,  0, rse)}
+
+    // Bottom edge
+    if not s { draw.line((xr - rse, yb), (xl + rsw, yb), ..style, fill: none, close: false)}
+
+    // SW corner
+    if not s and not w { bez((xl + rsw, yb), (xl, yb + rsw), -1,  0,  0, -1, rsw)}
+
+    // Left edge
+    if not w { draw.line((xl, yb + rsw), (xl, yt - rnw), ..style, fill: none, close: false)}
+
+    // NW corner
+    if not n and not w { bez((xl, yt - rnw), (xl + rnw, yt),  0,  1, -1,  0, rnw) }
+  }
+  draw.merge-path(..style, stroke: none, {
+    // Top edge
+    draw.line((xl + rnw, yt), (xr - rne, yt))
+
+    // NE corner
+    if not n and not e { bez((xr - rne, yt), (xr, yt - rne),  1,  0,  0,  1, rne)} 
+    // Right edge
+    draw.line((xr, yt - rne), (xr, yb + rse))
+
+    // SE corner
+    if not s and not e { bez((xr, yb + rse), (xr - rse, yb),  0, -1,  1,  0, rse)}
+
+    // Bottom edge
+    draw.line((xr - rse, yb), (xl + rsw, yb))
+
+    // SW corner
+    if not s and not w { bez((xl + rsw, yb), (xl, yb + rsw), -1,  0,  0, -1, rsw)}
+
+    // Left edge
+    draw.line((xl, yb + rsw), (xl, yt - rnw))
+
+    // NW corner
+    if not n and not w { bez((xl, yt - rnw), (xl + rnw, yt),  0,  1, -1,  0, rnw)}
+  })
 }
