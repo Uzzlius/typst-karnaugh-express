@@ -200,7 +200,7 @@
 
 // given a term, parse it so that it can later be used to compare it to the subscripts
 #let parse-terms(vars, term) = {
-  let arrangement = term.split(",")
+  let arrangement = term.split("&")
   let var-val = ()
   let x = 0
   let mask = 0

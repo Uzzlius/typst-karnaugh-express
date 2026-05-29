@@ -12,7 +12,7 @@ The `karnaugh` function takes two necessary arguments: `variables` and `values`.
 #karnaugh(
   ("d", "c", "b", "a"),
   (1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1),
-  terms: ("!b, !a", "a, b")
+  terms: ("!b & !a", "a & b")
 )
 ```
 <img src="examples/example-1.png" width="250" alt = "A 4x4 Karnaugh map for variables d, c, b, and a. It shows blue highlights on the four corners and a green highlight on the central 2x2 square.">  
@@ -57,7 +57,7 @@ There are different ways of arranging variables on a Karnaugh map. One is the st
   ("a", "b", "c", "d"),
   (1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1),
   arrangement-standard: 1,
-  terms: ("!b, !a", "a, b")
+  terms: ("!b & !a", "a & b")
 )
 ```
 <img src="examples/example-3.png" width="250" alt = "A 4x4 Karnaugh map for variables a, b, c, and d using arrangement-standard: 1. The vertical bars are now named after the first two variables and the horizontal bars are named after the last two variables.">
@@ -72,14 +72,14 @@ You can also specify a completely custom arrangement. Just provide an `arrangeme
   ("a", "b", "c", "d"),
   (1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1),
   arrangement: (("a",), ("b", "d", "c")),
-  terms: ("!b, !a", "a, b")
+  terms: ("!b & !a", "a & b")
 )
 ```
 <img src="examples/example-4.png" width="250" alt = "A 2x8 Karnaugh map demonstrating a custom arrangement where variable a is on the vertical bar and b, d, c are on the horizontal bars.">
 
 ## Terms 
 
-To select cells in the K-map, you need to pass the `terms` parameter, which is an array of strings. Each element of the array represents a separate term. In the string, you need to separate each literal with a comma (`,`). If the variable should be `0`, put an exclamation mark (`!`) before the variable.
+To select cells in the K-map, you need to pass the `terms` parameter, which is an array of strings. Each element of the array represents a separate term. In the string, you need to separate each literal with a ampersand (`&`). If the variable should be `0`, put an exclamation mark (`!`) before the variable.
 
 Term highlighting supports automatic wraparound grouping across opposing edges of the Karnaugh map.
 
@@ -95,7 +95,7 @@ When multiple highlights overlap, readability can be improved by varying the ins
   ("a", "b", "c", "d"),
   (),
   var-disp: ($x_1$, $x_2$, $x_3$, $x_4$), 
-  terms: ("c", "a, b", "b,d"),
+  terms: ("c", "a & b", "b & d"),
   highlight-inset: 0.1, 
   highlight-steps: 3,
 )
