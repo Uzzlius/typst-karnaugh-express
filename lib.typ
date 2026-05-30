@@ -1,25 +1,22 @@
-#import "@preview/cetz:0.4.2" : canvas, draw
+#import "@preview/cetz:0.5.2" : canvas, draw
 #import "utils.typ": *
 
 #let karnaugh(
-    (variables),
-    (values),
-    arrangement: "",
+    variables,
+    values,
+    arrangement: auto,
     arrangement-standard: 0,
 
-    terms: "",
+    terms: (),
     var-disp: (),
 
     stroke: 0.5pt,
     grid-size: 0.8cm,
-    draw-subscripts:true,
+    draw-subscripts: true,
 
-    transparency: 70%,
-    colors: (blue, green, yellow, purple, red),
-
-
-    default-fill: "",
-    label: "",
+    default-fill: none,
+    function-name: "f",
+    label: auto,
 
     value-size: 1em,
     subscript-size: 0.6em,
@@ -28,18 +25,26 @@
     distance-bar-bar: 0.8,
     distance-bar-letter: 0.1,
     small-bar-len: 0.1,
-    label-position: (0.2, 0.2)
 
+    label-position: (0.2, 0.2),
+
+    highlight-transparency: 70%,
+    highlight-colors: (blue, green, yellow, purple, red),highlight-radius: 0.2,
+    highlight-inset: 0.1,
+    highlight-steps: 1,
+    highlight-stroke: 0.5pt,
   ) = {
 
   //create default label
-  if label == "" {
-    let var-string = create-var-string(variables)
-    label = "f(" + var-string + ")"
+  if label == auto {
+    label = create-label-equation(
+      var-disp + variables.slice(var-disp.len()),
+      funcname: function-name
+    )
   }
 
   //Generates one of two deault arrangements for k-maps
-  if arrangement == "" {
+  if arrangement == auto {
     arrangement = generate-standard-arrangements(variables, arrangement-standard)
   }
 
@@ -73,13 +78,27 @@
   canvas(length: grid-size,{
     // the grid is shifted by 0.5, so that coordinates are always in the center of a grid cell
     let abs-offset = 0.5
-    let distance-subscript-corner = (abs-offset - distance-subscript-corner)
+    let subscript-dist = (abs-offset - distance-subscript-corner)
 
     //highlight the cells as specified in the provided terms
     for (i, term) in term-positions.enumerate() {
+      let color = highlight-colors.at(calc.rem(i, highlight-colors.len()))
+      let gap = highlight-inset + calc.rem(i, highlight-steps) * (highlight-stroke / grid-size)
       for n in term {
         let coordinate-center = (n.at(0), columns - n.at(1) -1)
-        draw.rect((coordinate-center.at(0) -0.5, coordinate-center.at(1) -0.5), (coordinate-center.at(0) +0.5, coordinate-center.at(1) +0.5), fill: colors.at(calc.rem(i, colors.len())).transparentize(transparency), stroke: 0pt)
+        let neighbours = (
+          (n.at(0), calc.rem-euclid(n.at(1)-1, columns)) in term,
+          (calc.rem-euclid(n.at(0)+1, rows), n.at(1)) in term,
+          (n.at(0), calc.rem-euclid(n.at(1)+1, columns)) in term,
+          (calc.rem-euclid(n.at(0)-1, rows), n.at(1)) in term,
+        )
+        draw-bundle-cell(
+          coordinate-center,
+          neighbours,
+          radius: highlight-radius,
+          pad: gap,
+          fill: color.transparentize(highlight-transparency),
+          stroke: color + highlight-stroke)
       }
     }
 
@@ -90,13 +109,14 @@
     for column in range(columns) {
       for row in range(rows) {
 
+        let value = [#arranged-values.at(column, default: ()).at(row, default: none)]
         //draw values
-        draw.content((row, (columns - 1) - column), text(str(arranged-values.at(column, default: ()).at(row, default: default-fill)), size: value-size))
+        draw.content((row, (columns - 1) - column), text(value, size: value-size))
 
         //draw subscripts
         if draw-subscripts{
         draw.content(
-          (row + distance-subscript-corner, ((columns -1)-column) - distance-subscript-corner),
+          (row + subscript-dist, ((columns -1)-column) - subscript-dist),
           text(str(
             subscripts.at(column, default: ()).at(row, default: "")
             ), size: subscript-size),
@@ -117,7 +137,7 @@
             line.at(0) - (1 + abs-offset),
             line.at(1) - abs-offset,
             offset.at(i),
-            if i == 0 {false} else {true},
+            i != 0,
             columns,
             small-bar-len,
             distance-bar-letter,
@@ -131,7 +151,7 @@
     }
 
     //draw label
-    draw.content((0 - abs-offset - label-position.at(0), columns - abs-offset + label-position.at(1)), $label$, anchor: "south-east")
+    draw.content((0 - abs-offset - label-position.at(0), columns - abs-offset + label-position.at(1)), label, anchor: "south-east")
 
   })
 }
