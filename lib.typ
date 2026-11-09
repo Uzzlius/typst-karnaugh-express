@@ -1,5 +1,6 @@
 #import "@preview/cetz:0.5.2" : canvas, draw
 #import "utils.typ": *
+#import "graycode.typ": *
 
 #let karnaugh(
     variables,
@@ -48,8 +49,8 @@
     arrangement = generate-standard-arrangements(variables, arrangement-standard)
   }
 
-  //Generates the subscripts of the cells
-  let subscripts = generate-subscripts(variables, arrangement)
+  //Generates the graycodes of the cells
+  let graycodes = generate-cell-graycodes(variables, arrangement)
 
   //Calculate the amount of rows and columns
   let columns = calc.pow(2, arrangement.at(0).len())
@@ -64,15 +65,15 @@
     var-disp = arrange-disp-vars(var-disp, arrangement, variables)
   }
 
-  //arrange the provided values based on the generated subscripts
-  let arranged-values = arrange-values(values, subscripts, default-fill)
+  //arrange the provided values based on the generated graycodes
+  let arranged-values = arrange-values(values, graycodes, default-fill)
 
   //calculate, where the bars have to go
   //returns which rows/columns are being covered for a given variable
   let bar-definer = create-bar-values(arrangement)
 
   //find the terms
-  let term-positions = find-matching-term-positions(find-terms(variables, terms), subscripts)
+  let term-positions = find-matching-term-positions(find-terms(variables, terms), graycodes)
 
   //draw
   canvas(length: grid-size,{
@@ -118,7 +119,7 @@
         draw.content(
           (row + subscript-dist, ((columns -1)-column) - subscript-dist),
           text(str(
-            subscripts.at(column, default: ()).at(row, default: "")
+            graycodes.at(column, default: ()).at(row, default: "")
             ), size: subscript-size),
             anchor: "south-east"
           )

@@ -1,4 +1,5 @@
 #import "@preview/cetz:0.5.2" : draw
+#import "graycode.typ": generate-bit-positions, position-bits
 
 // creates the bar based on the previously calculated positions
 #let create-bar(name, start, end, offset, is-horizontal, height, small-bar-len, bar-letter-distance, stroke) = {
@@ -87,81 +88,12 @@
   (row-dict, col-dict)
 }
 
-// given the variables and an arrangement, determin how to shift the bits so that the arrangement becomes
-// the original variables. For example: vars = ("a", "b", "c"), arrangement = (("c"), ("a", "b"))
-// you need to move c to position 0, a to position 2 and b to position 1, so (0, 2, 1)
-#let generate-bit-positions(vars, arrangement) = {
-  let flattened-arrangement = arrangement.flatten()
-  let position-array = ()
-
-  if vars.len() != vars.dedup().len() or flattened-arrangement.len() != flattened-arrangement.dedup().len() {panic("One or more variables appear more than once")}
-
-  if vars.len() != flattened-arrangement.len() {panic("Too few arrangement variables")}
-
-  for variable-arrangement in flattened-arrangement {
-    let found-match = false
-    for (i, variable) in vars.rev().enumerate() {
-      if variable-arrangement == variable {
-        position-array.push(i)
-        found-match = true
-        break
-      }
-    }
-    if not found-match {panic("Arrangement of variables doesnt match the provided variables.")}
-  }
-  position-array
-}
-
-// combines two binary values as specified in the position array.
-// for example a = 110, b = 01, position-array = (4, 2, 3, 0, 1), dim - (3,2) -> 10110
-#let arrange-bits(position-array, row-gray, col-gray,  (dim), two-values: true) = {
-  let amount-of-vars = dim.at(0) + dim.at(1)
-  let concatenated-bits = 0
-  if two-values {
-    concatenated-bits = col-gray.bit-or(row-gray.bit-lshift(dim.at(1)))
-  } else {
-    concatenated-bits = row-gray
-  }
-
-  let cell-gray = 0
-
-  for i in range(amount-of-vars) {
-    let bit = concatenated-bits.bit-rshift(i).bit-and(1)
-    bit = bit.bit-lshift(position-array.at(amount-of-vars - i -1))
-    cell-gray = cell-gray.bit-or(bit)
-  }
-  cell-gray
-}
-
-// generate the subscripts of each cell based on the gray code of the row and column
-// using helper functions from above
-#let generate-subscripts(vars, arrangement) = {
-  let position-array = generate-bit-positions(vars, arrangement)
-  let row-bits = arrangement.at(0).len()
-  let col-bits = arrangement.at(1).len()
-
-  let rows = calc.pow(2, arrangement.at(0).len())
-  let cols = calc.pow(2, arrangement.at(1).len())
-
-  let subscript-array = ()
-
-  for i-row in range(rows) {
-    let row-array = ()
-    let row-gray = i-row.bit-xor(i-row.bit-rshift(1))
-    for i-col in range(cols) {
-      let col-gray = i-col.bit-xor(i-col.bit-rshift(1))
-      let cell-gray = arrange-bits(position-array, row-gray, col-gray, (row-bits, col-bits))
-      row-array.push(cell-gray)
-    }
-    subscript-array.push(row-array)
-  }
-
-  subscript-array
-}
 
 // generates two standard arrangements for variables in k-maps.
 // 0: alternating between row and column labeling, starting from the right
 // 1: rows first, then columns, starting from the left
+// for example
+// generate-standard-arrangements(("x1", "x2", "x3"), 0) = (("x2"), ("x1", "x3"))
 #let generate-standard-arrangements((vars), mode) = {
   let arrangement = ()
   let row-vars = calc.floor(vars.len()/2)
@@ -179,9 +111,10 @@
     arrangement = (row-arrangement, col-arrangement)
   }
 
-  if mode == 1 {
+  else if mode == 1 {
     arrangement = (vars.slice(0, row-vars), vars.slice(row-vars))
   }
+
   arrangement
 }
 
@@ -229,8 +162,8 @@
   }
   let position-array = generate-bit-positions(vars, var-val)
 
-  mask = arrange-bits(position-array, mask, 0, (amount-of-vars, 0), two-values: false)
-  x = arrange-bits(position-array, x, 0, (amount-of-vars, 0), two-values: false)
+  mask = position-bits(position-array, mask)
+  x = position-bits(position-array, x)
 
   (mask, x)
 }
