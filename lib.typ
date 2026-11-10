@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.5.2" : canvas, draw
+#import "@preview/cetz:0.5.3" : canvas, draw
 #import "src/utils.typ": *
 #import "src/graycode-handling.typ": *
 #import "src/terms.typ": *
@@ -7,7 +7,7 @@
 #import "src/bars.typ": *
 #import "src/value-handling.typ": *
 
-#let karnaugh(
+#let draw-karnaugh(
   variables,
   values,
 
@@ -86,7 +86,7 @@
 
   // Draw everything
 
-  canvas({
+  group(name: "karnaugh", {
     // The grid is shifted by 0.5, so that coordinates are always in the center of a grid cell
     let abs-offset = 0.5
     let subscript-dist = (abs-offset - distance-subscript-corner)
@@ -108,3 +108,10 @@
 
   })
 }
+
+// Wrapper for those who do not want to open their own cetz canvas,
+// though canvas arguemnts can still be passed
+#let karnaugh(canvas-args: (:), ..args) = canvas(
+  ..canvas-args,
+  draw-karnaugh(..args),
+)
