@@ -85,7 +85,8 @@
   let term-coordinates-list = term-list-to-active-coordinates(parsed-term-list, cell-gray-codes)
 
   // Draw everything
-  draw.group(name: "name", {
+
+  canvas({
     // The grid is shifted by 0.5, so that coordinates are always in the center of a grid cell
     let abs-offset = 0.5
     let subscript-dist = (abs-offset - distance-subscript-corner)
