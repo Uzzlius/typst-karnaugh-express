@@ -1,4 +1,4 @@
-#import "graycode.typ": generate-bit-positions, position-bits
+#import "graycode-handling.typ": generate-bit-positions, position-bits
 
 // given a term, parse it so that it can later be used to compare it to the cell graycode
 // returns a sequence of bits and a bit mask. For example
@@ -60,4 +60,32 @@
     parsed-terms.push(parse-term(vars, term))
   }
   parsed-terms
+}
+
+// Given a parsed term, find all the coordinates where it is active
+#let term-to-active-coordinates(parsed-term, cell-graycodes) = {
+  let coordinates = ()
+  for (i-row, row) in cell-graycodes.enumerate() {
+    for (i-col, cell-code) in cell-graycodes.at(i-row).enumerate() {
+
+      // If the cells graycode does not match the terms bits
+      // in the positions where the bit mask is 1, skip
+      if cell-code.bit-and(parsed-term.at(0)) != parsed-term.at(1) {continue}
+
+      // Else, the coordinate is active
+      coordinates.push((i-col, i-row))
+    }
+  }
+  coordinates
+}
+
+// use the parsed terms to determine what cells should be active
+#let term-list-to-active-coordinates(parsed-terms, cell-graycodes) = {
+  let coordinates-list = ()
+
+  // Calculate the coordinates for each term
+  for parsed-term in parsed-terms {
+    coordinates-list.push(term-to-active-coordinates(parsed-term, cell-graycodes))
+  }
+  coordinates-list
 }
