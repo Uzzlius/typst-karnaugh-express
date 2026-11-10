@@ -1,6 +1,6 @@
 // With an even count of vars, rows take even indices and columns take oddindices
 // This gets swapped with an odd count
-#let standard-0(vars) = {
+#let standard-1(vars) = {
   let row-vars-count = calc.floor(vars.len()/2)
   let col-vars-count = calc.ceil(vars.len()/2)
 
@@ -15,7 +15,7 @@
   (row-arrangement, col-arrangement)
 }
 
-#let standard-1(vars) = {
+#let standard-0(vars) = {
   let row-vars-count = calc.floor(vars.len()/2)
 
   (vars.slice(0, row-vars-count), vars.slice(row-vars-count))

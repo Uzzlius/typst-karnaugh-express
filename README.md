@@ -12,7 +12,8 @@ The `karnaugh` function takes two necessary arguments: `variables` and `values`.
 #karnaugh(
   ("d", "c", "b", "a"),
   (1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1),
-  terms: ("!b & !a", "a & b")
+  terms: ("!b & !a", "a & b"),
+  arrangement-standard: 1
 )
 ```
 <img src="examples/example-1.png" width="250" alt = "A 4x4 Karnaugh map for variables d, c, b, and a. It shows blue highlights on the four corners and a green highlight on the central 2x2 square.">  
@@ -38,7 +39,7 @@ Values are automatically placed so that you can read them directly from a truth 
 #karnaugh(
   ("a", "b", "c"),
   (0, 1, 2, 3, 4, 5, 6, 7),
-  arrangement-standard: 1
+  arrangement-standard: 0
 )
 ```
 <img src="examples/example-2.png" width="250" alt = "A 2x4 Karnaugh map for variables a, b, and c. Each cell contains its corresponding decimal index (0 through 7) to demonstrate how values from a truth table are mapped to the grid.">
@@ -48,7 +49,7 @@ Values are automatically placed so that you can read them directly from a truth 
 ### 1. Standard Arrangement
 There are different ways of arranging variables on a Karnaugh map. One is the standard layout shown in the first image. `karnaugh-express` supports two standard layouts that can be selected with the `arrangement-standard` argument. 
 
-`arrangement-standard: 0` is used in the first image. `arrangement-standard: 1` looks like this:
+`arrangement-standard: 1` is used in the first image. `arrangement-standard: 0` is the default and looks like this:
 
 ```typ
 #import "@preview/karnaugh-express:0.1.1": karnaugh
@@ -98,6 +99,7 @@ When multiple highlights overlap, readability can be improved by varying the ins
   terms: ("c", "a & b", "b & d"),
   highlight-inset: 0.1, 
   highlight-steps: 3,
+  arrangement-standard: 1
 )
 ```
 <img src="examples/example-5.png" width="250" alt = "A 4×4 Karnaugh map with three highlighted terms using different outline inset levels to keep overlapping highlights visually distinct.">
@@ -112,7 +114,8 @@ Because the variables you pass into the `karnaugh` function fulfill a functional
 #karnaugh(
   ("a", "b", "c", "d"),
   (),
-  var-disp: ($x_1$, $x_2$, $x_3$, $x_4$)
+  var-disp: ($x_1$, $x_2$, $x_3$, $x_4$),
+  arrangement-standard: 1
 )
 ```
 <img src="examples/example-6.png" width="250" alt = "The grid is arranged in the same way as the first example. However, the bars are no longer labeled a, b, c, d but instead x_1, x_2, x_3 and x_4 in math-mode.">
