@@ -1,6 +1,7 @@
 #import "@preview/cetz:0.5.2" : canvas, draw
-#import "utils.typ": *
-#import "graycode.typ": *
+#import "src/utils.typ": *
+#import "src/graycode.typ": *
+#import "src/term-parsing.typ": *
 
 #let karnaugh(
     variables,
@@ -73,10 +74,10 @@
   let bar-definer = create-bar-values(arrangement)
 
   //find the terms
-  let term-positions = find-matching-term-positions(find-terms(variables, terms), graycodes)
+  let term-positions = find-matching-term-positions(parse-term-list(variables, terms), graycodes)
 
   //draw
-  canvas(length: grid-size,{
+  draw.group(name: "name", {
     // the grid is shifted by 0.5, so that coordinates are always in the center of a grid cell
     let abs-offset = 0.5
     let subscript-dist = (abs-offset - distance-subscript-corner)

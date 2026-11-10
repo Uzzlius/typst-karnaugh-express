@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.5.2" : draw
+#import "@preview/cetz:0.5.3" : draw
 #import "graycode.typ": generate-bit-positions, position-bits
 
 // creates the bar based on the previously calculated positions
@@ -131,51 +131,6 @@
   arr
 }
 
-// given a term, parse it so that it can later be used to compare it to the subscripts
-#let parse-terms(vars, term) = {
-  let arrangement = term.split("&")
-  let var-val = ()
-  let x = 0
-  let mask = 0
-  let provided-variable-count = arrangement.len()
-  let amount-of-vars = vars.len()
-
-  for i in range(arrangement.len()) {
-    arrangement.at(i) = arrangement.at(i).trim(" ")
-    if arrangement.at(i).first() == "!" {
-      var-val.push(arrangement.at(i).trim("!"))
-    }
-    else {
-      var-val.push(arrangement.at(i))
-    }
-  }
-  for (i, var) in vars.enumerate() {
-    if not var in var-val {var-val.push(var)}
-  }
-  for (i, var) in var-val.enumerate() {
-    if i >= provided-variable-count {
-      break
-    }
-    mask = mask.bit-or(1.bit-lshift(amount-of-vars - i -1))
-    if arrangement.at(i).starts-with("!") {continue}
-    x = x.bit-or(1.bit-lshift(amount-of-vars - i -1))
-  }
-  let position-array = generate-bit-positions(vars, var-val)
-
-  mask = position-bits(position-array, mask)
-  x = position-bits(position-array, x)
-
-  (mask, x)
-}
-
-// parse multiple terms and put them into an array
-#let find-terms(vars, terms) = {
-  let parsed-terms = ()
-  for term in terms{
-    parsed-terms.push(parse-terms(vars, term))
-  }
-  parsed-terms
-}
 
 // use the parsed terms to determine what cells should be active
 #let find-matching-term-positions(parsed-terms, subscripts) = {

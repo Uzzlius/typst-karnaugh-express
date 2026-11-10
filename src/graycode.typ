@@ -20,11 +20,11 @@
   // REMOVE THIS CHECK FROM HERE. DO IT ELSEWHERE
   if (vars.len() != vars.dedup().len() or
     flattened-arrangement.len() != flattened-arrangement.dedup().len()) {
-    panic("One or more variable(s) appear more than once")
+    panic("One or more variable(s) appear more than once in an arrangement.")
   }
 
-  // REMOVE THIS CHECK FROM HERE. DO IT ELSEWHERE
-  if vars.len() != flattened-arrangement.len() {panic("Too few arrangement variables")}
+  // // REMOVE THIS CHECK FROM HERE. DO IT ELSEWHERE
+  // if vars.len() != flattened-arrangement.len() {panic("Too few arrangement variables")}
 
   // loop through all of the variables that are used in the arrangement array
   for variable-arrangement in flattened-arrangement {
@@ -109,7 +109,7 @@
     graycode-array.push(row-array)
   }
 
-  // the resulting 2d array maps each cell in the resulting KV-map
+  // the resulting 2d array maps each cell in the resulting K-map
   // to its gray code
   graycode-array
 }
