@@ -10,16 +10,18 @@
   for row in range(row-count) {
     for column in range(column-count) {
 
+      let cell-graycode = cell-graycodes.at(column).at(row)
+
       let value = [#placed-values.at(column, default: ()).at(row, default: none)]
       // Draw values
-      content((row, (column-count - 1) - column), text(value, size: value-font-size))
+      content(name: str(cell-graycode), (row, (column-count - 1) - column), text(value, size: value-font-size))
 
       // Draw subscripts
       if draw-subscripts{
       content(
         (row + subscript-dist, ((column-count -1)-column) - subscript-dist),
         text(str(
-          cell-graycodes.at(column, default: ()).at(row, default: "")
+          cell-graycode
           ), size: subscript-font-size),
           anchor: "south-east"
         )
