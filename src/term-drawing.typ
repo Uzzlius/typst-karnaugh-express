@@ -104,14 +104,14 @@
 }
 
 // Draws all the term bundles provided in the term-coordinate-list
-#let draw-multiple-bundle-cells(term-coordinates-list, highlight-colors, highlight-inset, highlight-steps, highlight-stroke, columns, rows, highlight-radius, highlight-transparency) = {
+#let draw-multiple-bundle-cells(term-coordinates-list, highlight-colors, highlight-inset, highlight-steps, highlight-stroke, columns, rows, highlight-radius, highlight-transparency, step-distance) = {
   for (term-number, term-coordinates) in term-coordinates-list.enumerate() {
     // Iterate through the coloros. Wrap around
     let color = highlight-colors.at(calc.rem(term-number, highlight-colors.len()))
 
     // Calculate the inset of a given term, so the distance
     // from the grid line to the bundle outline
-    let gap = highlight-inset + calc.rem(term-number, highlight-steps)
+    let gap = highlight-inset + calc.rem(term-number, highlight-steps) * step-distance
 
     for single-coordinate in term-coordinates {
       let row = single-coordinate.at(0)
