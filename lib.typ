@@ -23,7 +23,7 @@
   stroke: 0.5pt,                                         // length | color | stroke
   draw-subscripts: true,                                 // bool
 
-  default-fill: none,                                    // content | none
+  default-fill: none,                                    // content
   function-name: $f$,                                    // content
   label: auto,                                           // content | auto
 
@@ -102,7 +102,7 @@
   assert-array-of(var-disp, content-types, "var-disp")
   assert-type(stroke, stroke-types, "stroke")
   assert-type(draw-subscripts, bool, "draw-subscripts")
-  assert-type(default-fill, fill-types, "default-fill")
+  assert-type(default-fill, content-types, "default-fill")
   assert-type(function-name, content-types, "function-name")
   assert-type(label, (type(auto), content-types), "label")
   assert-type(value-font-size, length, "value-font-size")

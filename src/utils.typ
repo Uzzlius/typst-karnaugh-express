@@ -45,7 +45,6 @@
 #let none-type = type(none)
 
 #let content-types = (str, content-type, int, float, symbol-type, none-type)
-#let fill-types = content-types + (type(none),)
 #let number-types = (int, float)
 #let stroke-types = (length, color, stroke-type)
 
