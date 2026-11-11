@@ -1,12 +1,25 @@
 #import "graycode-handling.typ": generate-bit-positions, position-bits
 
+#let is-minterm(term) = {
+  let contains-and = "&" in term
+  let contains-or = "|" in term
+
+  if contains-and and contains-or {panic("The term `" + term + "` contains both `&` and `|`.")}
+
+  not contains-or
+}
+
 // given a term, parse it so that it can later be used to compare it to the cell graycode
 // returns a sequence of bits and a bit mask. For example
 // bits: 1001101, mask: 1000001, so later, we can check wether the cell graycode matches
 // these bits in the positions where the masks bits are 1
 #let parse-term(vars, term) = {
+
+  // Check, wether the provided term is a minterm
+  let is-minterm = is-minterm(term)
+
   // Extracts all literals from the term
-  let literals-in-term = term.split("&")
+  let literals-in-term = term.split(if is-minterm {"&"} else {"|"})
 
   // Represents the number of literals in a term
   let literal-count = literals-in-term.len()
@@ -35,7 +48,9 @@
   // The bit mask is 1 for every literal
   for (i, var) in variables-in-term.enumerate().rev() {
     term-bit-mask = term-bit-mask.bit-or(1.bit-lshift(literal-count - i -1))
-    if not literals-in-term.at(i).starts-with("!") {
+
+    // Behaviour is inverted for minterms and maxterms
+    if literals-in-term.at(i).starts-with("!") != is-minterm {
       term-as-bits = term-as-bits.bit-or(1.bit-lshift(literal-count - i -1))
     }
   }
