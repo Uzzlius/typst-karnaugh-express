@@ -130,7 +130,7 @@
     highlight-steps >= 1,
     message: "`highlight-steps`: expected an integer >= 1, got " + repr(highlight-steps),
   )
-  assert-type(highlight-stroke, length, "highlight-stroke")
+  assert-type(highlight-stroke, stroke-types, "highlight-stroke")
 
   // -----------------------------------------------
 
@@ -186,19 +186,23 @@
     let abs-offset = 0.5
     let subscript-dist = (abs-offset - distance-subscript-corner)
 
-    // Draw the grid
-    draw.grid((column-count - abs-offset, row-count - abs-offset), (-abs-offset, -abs-offset), stroke: stroke)
-
     // Draw the terms into the K-map
     // Wrapped inside of get-ctx, to get access to the canvas scaling
     get-ctx(ctx => {
+      // Convert the stroke into a standard stroke
+      let highlight-stroke = std.stroke(highlight-stroke)
+      let thickness = if highlight-stroke.thickness == auto { 1pt } else { highlight-stroke.thickness }
+
       // Convert the given highlight-stroke (absolute length) to coordinates
       // relative to cetz's scaling
-      let step-distance = highlight-stroke / ctx.length
+      let step-distance = thickness / ctx.length
 
       // Call the drawing helper
       draw-multiple-bundle-cells(term-coordinates-list, highlight-colors, highlight-inset, highlight-steps, highlight-stroke, column-count, row-count, highlight-radius, highlight-transparency, step-distance)
     })
+
+    // Draw the grid
+    draw.grid((column-count - abs-offset, row-count - abs-offset), (-abs-offset, -abs-offset), stroke: stroke)
 
     // Place the values in the grid and draw the subscripts
     draw-values-and-subscripts(placed-values, cell-gray-codes, value-font-size, draw-subscripts, subscript-dist, subscript-font-size)
