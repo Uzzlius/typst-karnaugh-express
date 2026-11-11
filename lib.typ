@@ -190,7 +190,15 @@
     draw.grid((column-count - abs-offset, row-count - abs-offset), (-abs-offset, -abs-offset), stroke: stroke)
 
     // Draw the terms into the K-map
-    draw-multiple-bundle-cells(term-coordinates-list, highlight-colors, highlight-inset, highlight-steps, highlight-stroke, column-count, row-count, highlight-radius, highlight-transparency)
+    // Wrapped inside of get-ctx, to get access to the canvas scaling
+    get-ctx(ctx => {
+      // Convert the given highlight-stroke (absolute length) to coordinates
+      // relative to cetz's scaling
+      let step-distance = highlight-stroke / ctx.length
+
+      // Call the drawing helper
+      draw-multiple-bundle-cells(term-coordinates-list, highlight-colors, highlight-inset, highlight-steps, highlight-stroke, column-count, row-count, highlight-radius, highlight-transparency, step-distance)
+    })
 
     // Place the values in the grid and draw the subscripts
     draw-values-and-subscripts(placed-values, cell-gray-codes, value-font-size, draw-subscripts, subscript-dist, subscript-font-size)
