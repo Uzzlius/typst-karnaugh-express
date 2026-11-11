@@ -42,9 +42,9 @@
 #let content-type = type([])
 #let symbol-type = type(sym.alpha)
 #let stroke-type = type(1pt + black)
+#let none-type = type(none)
 
-#let content-types = (str, content-type, int, float, symbol-type)
-#let fill-types = content-types + (type(none),)
+#let content-types = (str, content-type, int, float, symbol-type, none-type)
 #let number-types = (int, float)
 #let stroke-types = (length, color, stroke-type)
 
