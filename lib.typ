@@ -42,7 +42,7 @@
   highlight-radius: 0.2,                                 // number
   highlight-inset: 0.1,                                  // number
   highlight-steps: 1,                                    // int (>= 1)
-  highlight-stroke: 0.5pt,                               // length | color | stroke
+  highlight-stroke: 0.5pt,                               // length
   ) = {
 
   // If the following arguments were not passed as an array, it might have been on accident
@@ -90,6 +90,10 @@
       doubled.len() == 0,
       message: "`arrangement`: each name may only occur once, duplicates: " + repr(doubled),
     )
+    assert(
+      arrangement.len() == 2,
+      message: "`arrangement`: needs to contain two arrays, but contains " + str(arrangement.len())
+    )
   }
   assert-type(arrangement-standard, int, "arrangement-standard")
   assert-type(name, str, "name")
@@ -123,10 +127,10 @@
   assert-type(highlight-inset, number-types, "highlight-inset")
   assert-type(highlight-steps, int, "highlight-steps")
   assert(
-    highlight-steps >= 0,
-    message: "`highlight-steps`: expected an integer >= 0, got " + repr(highlight-steps),
+    highlight-steps >= 1,
+    message: "`highlight-steps`: expected an integer >= 1, got " + repr(highlight-steps),
   )
-  assert-type(highlight-stroke, stroke-types, "highlight-stroke")
+  assert-type(highlight-stroke, length, "highlight-stroke")
 
   // -----------------------------------------------
 
