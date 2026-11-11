@@ -188,8 +188,9 @@
     // Draw the terms into the K-map
     // Wrapped inside of get-ctx, to get access to the canvas scaling
     get-ctx(ctx => {
-      // Convert 0.5pt (the lines stroke width) to coordinates
-      let step-distance = 0.5pt / ctx.length
+      // Convert the given highlight-stroke (absolute length) to coordinates
+      // relative to cetz's scaling
+      let step-distance = highlight-stroke / ctx.length
 
       // Call the drawing helper
       draw-multiple-bundle-cells(term-coordinates-list, highlight-colors, highlight-inset, highlight-steps, highlight-stroke, column-count, row-count, highlight-radius, highlight-transparency, step-distance)
