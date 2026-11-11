@@ -73,7 +73,7 @@
 #let split-number-bits(number, left-count, right-count) = {
   let right = decode-gray-code(extract-lower-n(number, right-count))
   let left = decode-gray-code(extract-lower-n(number.bit-rshift(right-count), left-count))
-  (right, left)
+  (left, right)
 }
 
 // apply the position-array, so move the bits to the correct positions

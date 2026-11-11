@@ -1,8 +1,9 @@
 #import "@preview/cetz:0.5.3": draw
-#import draw: *
 
 // Draws the subscripts and values to the correct cells
 #let draw-values-and-subscripts(placed-values, cell-graycodes, value-font-size, draw-subscripts, subscript-dist, subscript-font-size) = {
+  import draw: *
+
   let row-count = cell-graycodes.len()
   let column-count = cell-graycodes.at(0).len()
 

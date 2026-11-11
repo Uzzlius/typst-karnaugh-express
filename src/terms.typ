@@ -73,7 +73,7 @@
       if cell-code.bit-and(parsed-term.at(0)) != parsed-term.at(1) {continue}
 
       // Else, the coordinate is active
-      coordinates.push((i-col, i-row))
+      coordinates.push((i-row, i-col))
     }
   }
   coordinates

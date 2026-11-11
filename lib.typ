@@ -147,8 +147,8 @@
   let cell-gray-codes = generate-cell-graycodes(variables, arrangement)
 
   // Calculate the amount of rows and columns
-  let column-count = calc.pow(2, arrangement.at(0).len())
-  let row-count = calc.pow(2, arrangement.at(1).len())
+  let column-count = calc.pow(2, arrangement.at(1).len())
+  let row-count = calc.pow(2, arrangement.at(0).len())
 
   // Arranges the display variables in the same way as the functinal variables
   // if no display variables are provided, use the functional variables
@@ -182,20 +182,20 @@
     let abs-offset = 0.5
     let subscript-dist = (abs-offset - distance-subscript-corner)
 
+    // Draw the grid
+    draw.grid((column-count - abs-offset, row-count - abs-offset), (-abs-offset, -abs-offset), stroke: stroke)
+
     // Draw the terms into the K-map
     draw-multiple-bundle-cells(term-coordinates-list, highlight-colors, highlight-inset, highlight-steps, highlight-stroke, column-count, row-count, highlight-radius, highlight-transparency)
-
-    // Draw the grid
-    draw.grid((row-count - abs-offset, column-count - abs-offset), (-abs-offset, - abs-offset), stroke: stroke)
 
     // Place the values in the grid and draw the subscripts
     draw-values-and-subscripts(placed-values, cell-gray-codes, value-font-size, draw-subscripts, subscript-dist, subscript-font-size)
 
     // Draw all of the bars that indicate where a variable is active
-    draw-all-bars(bar-positions, abs-offset, distance-bar-grid, distance-bar-bar, distance-bar-letter, column-count, var-disp, small-bar-len, stroke)
+    draw-all-bars(bar-positions, abs-offset, distance-bar-grid, distance-bar-bar, distance-bar-letter, row-count, var-disp, small-bar-len, stroke)
 
     // Draw the Label
-    draw.content((0 - abs-offset - label-position.at(0), column-count - abs-offset + label-position.at(1)), label, anchor: "south-east")
+    draw.content((0 - abs-offset - label-position.at(0), row-count - abs-offset + label-position.at(1)), label, anchor: "south-east")
 
   })
 }
