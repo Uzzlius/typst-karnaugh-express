@@ -88,8 +88,8 @@
   line(small-line-2.at(0), small-line-2.at(1), stroke: stroke)
 }
 
-#let draw-all-bars(bar-positions, abs-offset, distance-bar-grid, distance-bar-bar, distance-bar-letter, column-count, var-disp, small-bar-len, stroke) = {
-  let offset = (-abs-offset -distance-bar-grid, column-count - abs-offset + distance-bar-grid)
+#let draw-all-bars(bar-positions, abs-offset, distance-bar-grid, distance-bar-bar, distance-bar-letter, row-count, var-disp, small-bar-len, stroke) = {
+  let offset = (-abs-offset -distance-bar-grid, row-count - abs-offset + distance-bar-grid)
 
   for (i, el) in bar-positions.enumerate() {
     for (n, (_, lines)) in el.pairs().enumerate().rev() {
@@ -100,7 +100,7 @@
           line.at(1) - abs-offset,
           offset.at(i),
           i != 0,
-          column-count,
+          row-count,
           small-bar-len,
           distance-bar-letter,
           stroke
