@@ -16,6 +16,7 @@
 
   name: "karnaugh",
 
+  custom-highlightings: (),
   terms: (),
   var-disp: (),
 
@@ -83,8 +84,11 @@
   // Parse all the terms
   let parsed-term-list = parse-term-list(variables, terms)
 
+  // Calculate coordinates form the custom highlightings
+  let custom-coordinates = calculate-coordinates-from-custom-highlightings(custom-highlightings, arrangement, variables)
+
   // Calculate the term coordinates
-  let term-coordinates-list = term-list-to-active-coordinates(parsed-term-list, cell-gray-codes)
+  let term-coordinates-list = term-list-to-active-coordinates(parsed-term-list, cell-gray-codes) + custom-coordinates
 
   // Draw everything
 

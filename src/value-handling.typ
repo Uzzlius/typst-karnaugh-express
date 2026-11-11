@@ -10,16 +10,16 @@
   for row in range(row-count) {
     for column in range(column-count) {
 
-      let cell-graycode = cell-graycodes.at(column).at(row)
+      let cell-graycode = cell-graycodes.at(row).at(column)
 
-      let value = [#placed-values.at(column, default: ()).at(row, default: none)]
+      let value = [#placed-values.at(row, default: ()).at(column, default: none)]
       // Draw values
-      content(name: str(cell-graycode), (row, (column-count - 1) - column), text(value, size: value-font-size))
+      content(name: str(cell-graycode), (column, (row-count - 1) - row), text(value, size: value-font-size))
 
       // Draw subscripts
       if draw-subscripts{
       content(
-        (row + subscript-dist, ((column-count -1)-column) - subscript-dist),
+        (column + subscript-dist, ((row-count -1)-row) - subscript-dist),
         text(str(
           cell-graycode
           ), size: subscript-font-size),

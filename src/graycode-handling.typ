@@ -3,6 +3,21 @@
   number.bit-xor(number.bit-rshift(1))
 }
 
+// reverses the gray code function
+#let decode-gray-code(number) = {
+  let result = 0
+  while number > 0 {
+    result = result.bit-xor(number)
+    number = number.bit-rshift(1)
+  }
+  result
+}
+
+// extracts the lowest n bits from a number
+#let extract-lower-n(number, n) = {
+  number.bit-and((1).bit-lshift(n) - 1)
+}
+
 // given the variables and an arrangement, determin how much you need to shift the bits so that the arrangement becomes
 // the original variables.
 // We are given the following variables (in the order of the truth table)
@@ -12,22 +27,23 @@
 // you need to move c to position 0 (from the right), a to position 2 and b to position 1, so (0, 2, 1)
 #let generate-bit-positions(vars, arrangement) = {
   // flatten the arrangement array
-  let flattened-arrangement = arrangement.flatten()
+  let arrangement = arrangement.flatten()
+  let vars = vars.flatten()
 
   let position-array = ()
 
 
   // REMOVE THIS CHECK FROM HERE. DO IT ELSEWHERE
   if (vars.len() != vars.dedup().len() or
-    flattened-arrangement.len() != flattened-arrangement.dedup().len()) {
+    arrangement.len() != arrangement.dedup().len()) {
     panic("One or more variable(s) appear more than once in an arrangement.")
   }
 
   // // REMOVE THIS CHECK FROM HERE. DO IT ELSEWHERE
-  // if vars.len() != flattened-arrangement.len() {panic("Too few arrangement variables")}
+  // if vars.len() != arrangement.len() {panic("Too few arrangement variables")}
 
   // loop through all of the variables that are used in the arrangement array
-  for variable-arrangement in flattened-arrangement {
+  for variable-arrangement in arrangement {
     let found-match = false
 
     // counting from the right to the left of the variables array
@@ -52,6 +68,12 @@
 // this becomes 1001110
 #let concatenate-bits(b, a, a-len) = {
   a.bit-or(b.bit-lshift(a-len))
+}
+
+#let split-number-bits(number, left-count, right-count) = {
+  let right = decode-gray-code(extract-lower-n(number, right-count))
+  let left = decode-gray-code(extract-lower-n(number.bit-rshift(right-count), left-count))
+  (right, left)
 }
 
 // apply the position-array, so move the bits to the correct positions
@@ -112,4 +134,26 @@
   // the resulting 2d array maps each cell in the resulting K-map
   // to its gray code
   graycode-array
+}
+
+#let calculate-coordinate-from-gray-code(number, positions-array, row-vars, col-vars) = {
+  let reversed-positioning = position-bits(positions-array, number)
+  split-number-bits(reversed-positioning, row-vars, col-vars)
+}
+
+#let calculate-coordinates-from-custom-highlightings(highlightings, arrangement, variables) = {
+  let row-vars = arrangement.at(0).len()
+  let col-vars = arrangement.at(1).len()
+
+  let positions-array = generate-bit-positions(arrangement, variables)
+  let term-coordinates-list = ()
+  for single-term-highlightings in highlightings {
+    let coordinates = ()
+    for code in single-term-highlightings {
+      let coordinate = calculate-coordinate-from-gray-code(code, positions-array, row-vars, col-vars)
+      coordinates.push(coordinate)
+    }
+    term-coordinates-list.push(coordinates)
+  }
+  term-coordinates-list
 }
