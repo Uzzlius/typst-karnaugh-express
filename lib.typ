@@ -15,6 +15,7 @@
   arrangement-standard: 0,                               // int
 
   name: "karnaugh",                                      // str
+  use-cetz-naming: true,                                 // bolean
 
   custom-highlightings: (),                              // array of array of int
   terms: (),                                             // array of str
@@ -97,6 +98,7 @@
   }
   assert-type(arrangement-standard, int, "arrangement-standard")
   assert-type(name, str, "name")
+  assert-type(use-cetz-naming, bool, "use-cetz-naming")
   assert-array-of-arrays-of(custom-highlightings, int, "custom-highlightings")
   assert-array-of(terms, str, "terms")
   assert-array-of(var-disp, content-types, "var-disp")
@@ -133,6 +135,10 @@
   assert-type(highlight-stroke, stroke-types, "highlight-stroke")
 
   // -----------------------------------------------
+
+  // Convert the stroke that could be just a length or just a color
+  // to the standard stroke type
+  let highlight-stroke = std.stroke(highlight-stroke)
 
   // Create default label
   if label == auto {
@@ -187,25 +193,13 @@
     let subscript-dist = (abs-offset - distance-subscript-corner)
 
     // Draw the terms into the K-map
-    // Wrapped inside of get-ctx, to get access to the canvas scaling
-    get-ctx(ctx => {
-      // Convert the stroke into a standard stroke
-      let highlight-stroke = std.stroke(highlight-stroke)
-      let thickness = if highlight-stroke.thickness == auto { 1pt } else { highlight-stroke.thickness }
-
-      // Convert the given highlight-stroke (absolute length) to coordinates
-      // relative to cetz's scaling
-      let step-distance = thickness / ctx.length
-
-      // Call the drawing helper
-      draw-multiple-bundle-cells(term-coordinates-list, highlight-colors, highlight-inset, highlight-steps, highlight-stroke, column-count, row-count, highlight-radius, highlight-transparency, step-distance)
-    })
+    draw-multiple-bundle-cells(term-coordinates-list, highlight-colors, highlight-inset, highlight-steps, highlight-stroke, column-count, row-count, highlight-radius, highlight-transparency)
 
     // Draw the grid
     draw.grid((column-count - abs-offset, row-count - abs-offset), (-abs-offset, -abs-offset), stroke: stroke)
 
     // Place the values in the grid and draw the subscripts
-    draw-values-and-subscripts(placed-values, cell-gray-codes, value-font-size, draw-subscripts, subscript-dist, subscript-font-size)
+    draw-values-and-subscripts(placed-values, cell-gray-codes, value-font-size, draw-subscripts, subscript-dist, subscript-font-size, use-cetz-naming)
 
     // Draw all of the bars that indicate where a variable is active
     draw-all-bars(bar-positions, abs-offset, distance-bar-grid, distance-bar-bar, distance-bar-letter, row-count, var-disp, small-bar-len, stroke)

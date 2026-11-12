@@ -22,7 +22,7 @@
 },)
 
 // Draws the subscripts and values to the correct cells
-#let draw-values-and-subscripts(placed-values, cell-graycodes, value-font-size, draw-subscripts, subscript-dist, subscript-font-size) = {
+#let draw-values-and-subscripts(placed-values, cell-graycodes, value-font-size, draw-subscripts, subscript-dist, subscript-font-size, use-cetz-naming) = {
   import cetz: draw
   import draw: *
 
@@ -37,16 +37,18 @@
 
       let value = [#placed-values.at(row, default: ()).at(column, default: none)]
       // Draw values
-      fast-content(name: str(cell-graycode), (column, (row-count - 1) - row), text(value, size: value-font-size))
+      let str-graycode = str(cell-graycode)
+      let name = none
+      if use-cetz-naming {
+        name = str-graycode
+      }
+      fast-content(name: name, (column, (row-count - 1) - row), text(value, size: value-font-size))
 
       // Draw subscripts
       if draw-subscripts{
       fast-content(
         (column + subscript-dist, ((row-count -1)-row) - subscript-dist),
-        text(str(
-          cell-graycode
-          ), size: subscript-font-size),
-          anchor-se: true
+        text(str-graycode, size: subscript-font-size), anchor-se: true
         )
       }
 
