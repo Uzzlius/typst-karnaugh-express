@@ -1,7 +1,29 @@
-#import "@preview/cetz:0.5.3": draw
+#import "@preview/cetz:0.5.3"
+
+// Draws content like cetz's internal draw.content, but way faster
+#let fast-content(name: none, anchor-se: false, pos, body) = ((ctx) => {
+  let (width: w, height: h) = measure(body)
+  let (w, h) = (w / ctx.length, h / ctx.length)
+  let p = cetz.util.apply-transform(ctx.transform, (pos.at(0), pos.at(1), 0))
+  if anchor-se {
+    p = (p.at(0)-w/2, p.at(1)+h/2, p.at(2))
+  }
+
+  (
+    ctx: ctx,
+    name: name,
+    anchors: p,
+    drawables: ((
+      type: "content", pos: p,
+      width: w, height: h,
+      segments: (), body: body, tags: (),
+    ),),
+  )
+},)
 
 // Draws the subscripts and values to the correct cells
 #let draw-values-and-subscripts(placed-values, cell-graycodes, value-font-size, draw-subscripts, subscript-dist, subscript-font-size) = {
+  import cetz: draw
   import draw: *
 
   let row-count = cell-graycodes.len()
@@ -15,18 +37,19 @@
 
       let value = [#placed-values.at(row, default: ()).at(column, default: none)]
       // Draw values
-      content(name: str(cell-graycode), (column, (row-count - 1) - row), text(value, size: value-font-size))
+      fast-content(name: str(cell-graycode), (column, (row-count - 1) - row), text(value, size: value-font-size))
 
       // Draw subscripts
       if draw-subscripts{
-      content(
+      fast-content(
         (column + subscript-dist, ((row-count -1)-row) - subscript-dist),
         text(str(
           cell-graycode
           ), size: subscript-font-size),
-          anchor: "south-east"
+          anchor-se: true
         )
       }
+
     }
   }
 }
