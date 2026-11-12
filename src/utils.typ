@@ -46,7 +46,7 @@
 
 #let content-types = (str, content-type, int, float, symbol-type, none-type)
 #let number-types = (int, float)
-#let stroke-types = (length, color, stroke-type)
+#let stroke-types = (length, color, stroke-type, dictionary)
 
 // Returns the type name of a variable
 #let type-name(x) = str(type(x))
@@ -80,3 +80,13 @@
 
 // Returns elements that occur more than once in an array
 #let duplicates-in(x) = x.filter(v => x.filter(w => w == v).len() > 1).dedup()
+
+// Recolor a standard stroke
+#let recolor-stroke(s, paint) = std.stroke(
+  paint: paint,
+  thickness: s.thickness,
+  cap: s.cap,
+  join: s.join,
+  dash: s.dash,
+  miter-limit: s.miter-limit,
+)
