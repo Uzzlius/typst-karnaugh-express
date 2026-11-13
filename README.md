@@ -33,7 +33,7 @@ Values are automatically placed so that you can read them directly from a truth 
 | 1 | 1 | 1 | 7        |
 
 ```typ
-#import "@preview/karnaugh-express:0.1.1": karnaugh
+#import "@preview/karnaugh-express:1.0.0": karnaugh
 
 #karnaugh(
   ("a", "b", "c"),
@@ -50,7 +50,7 @@ There are different ways of arranging variables on a Karnaugh map. One is the st
 `arrangement-standard: 0` is used in the first image. It is the most common way of arranging variables on K-maps and thus the standard setting of this package. `arrangement-standard: 1` is a different option that is often used and looks like this.
 
 ```typ
-#import "@preview/karnaugh-express:0.1.1": karnaugh
+#import "@preview/karnaugh-express:1.0.0": karnaugh
 
 #karnaugh(
   ("a", "b", "c", "d"),
@@ -65,7 +65,7 @@ There are different ways of arranging variables on a Karnaugh map. One is the st
 You can also specify a completely custom arrangement. Just provide an `arrangement` parameter as an array of two arrays. The first array contains the row axis variables, and the second array contains the column axis variables:
 
 ```typ
-#import "@preview/karnaugh-express:0.1.1": karnaugh
+#import "@preview/karnaugh-express:1.0.0": karnaugh
 
 #karnaugh(
   ("a", "b", "c", "d"),
@@ -99,7 +99,7 @@ Use highlight-inset to control the gap between the grid and a highlight outline.
 When multiple highlights overlap, readability can be improved by varying the inset for each term. The amount by which successive highlights are offset is determined by highlight-stroke. Use highlight-steps to specify how many different inset levels should be used before the pattern repeats.
 
 ```typ
-#import "@preview/karnaugh-express:0.1.1": karnaugh
+#import "@preview/karnaugh-express:1.0.0": karnaugh
 
 #karnaugh(
   ("a", "b", "c", "d"), (),
@@ -116,7 +116,7 @@ When multiple highlights overlap, readability can be improved by varying the ins
 Because the variables you pass into the `karnaugh` function fulfill a functional purpose (used to specify which cells should be highlighted), they cannot be passed in math mode. This is what the `var-disp` parameter is for. Just create a second array detailing how you want each variable to be displayed, in the exact same order as your functional variables:
 
 ```typ
-#import "@preview/karnaugh-express:0.1.1": karnaugh
+#import "@preview/karnaugh-express:1.0.0": karnaugh
 
 #karnaugh(
   ("a", "b", "c", "d"),
