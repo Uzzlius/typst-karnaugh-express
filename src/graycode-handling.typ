@@ -153,6 +153,7 @@
       let coordinate = calculate-coordinate-from-gray-code(code, positions-array, row-vars, col-vars)
       coordinates.push(coordinate)
     }
+    if coordinates.len() == 0 {continue}
     term-coordinates-list.push(coordinates)
   }
   term-coordinates-list
